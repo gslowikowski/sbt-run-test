@@ -82,6 +82,38 @@
                     </execution>
                 </executions> -->
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <property name="out.dir" value="${project.build.directory}/buildinfo/buildinfo" />
+                                <property name="out.file" value="${out.dir}/BuildInfo.scala" />
+                                <tstamp>
+                                    <format property="builtAt" pattern="yyyy-MM-dd HH:mm:ss" timezone="UTC" />
+                                </tstamp>
+                                <mkdir dir="${out.dir}"/>
+                                <echo file="${out.file}" message="package buildinfo${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="case object BuildInfo {${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="   val name: String = &quot;${project.artifactId}&quot;${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="   val version: String = &quot;${project.version}&quot;${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="   val scalaVersion: String = &quot;${scala.version}&quot;${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="   val builtAt: String = &quot;${builtAt}&quot;${line.separator}${line.separator}" />
+                                <echo file="${out.file}" append="true" message="}${line.separator}" />
+                            </tasks>
+                            <sourceRoot>${project.build.directory}/buildinfo</sourceRoot>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
